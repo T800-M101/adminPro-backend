@@ -15,26 +15,26 @@ const { dbConnection, dbConenction } = require('./database/config');
 // Crear el servidor Express
 const app = express();
 
+// ========================= MIDDLEWARES (respetar orden)========================================//
 // Configurar CORS
 app.use(cors());
 
+// Lectura y parseo del body (debe ir antes de las rutas)
+app.use(express.json())
+
+// Rutas
+// Se le pasa la ruta que llamará el controlador
+app.use('/api/users', require('./routes/users.route'));
+app.use('/api/login', require('./routes/auth.route'));
+
+
+// ============================== DATABASE =========================================//
 // Base de datos
 
 dbConenction();
 // Obteniendo el puerto desde variables de entorno
 const { PORT } = process.env;
 
-//============================= RUTAS ============================================//
-
-app.get( '/', (req, res) => {
-   
-   
- // Aquí el req viene por el body y se retorna el body de la respuesta mediante un objeto
-    res.json({
-        ok:true,
-        msj: 'Hola Mundo'
-    })
-});
 
 
 //========================== LEVANTAR EL SERVIDOR EXPRESS ============================//
