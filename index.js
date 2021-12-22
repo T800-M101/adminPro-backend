@@ -25,7 +25,11 @@ app.use(express.json())
 // Rutas
 // Se le pasa la ruta que llamará el controlador
 app.use('/api/users', require('./routes/users.route'));
+app.use('/api/hospitals', require('./routes/hospitals.route'));
+app.use('/api/medics', require('./routes/medics.route'));
 app.use('/api/login', require('./routes/auth.route'));
+app.use('/api/todo', require('./routes/busquedas.route'));
+app.use('/api/upload', require('./routes/uploads.route'));
 
 
 // ============================== DATABASE =========================================//
