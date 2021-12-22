@@ -36,6 +36,12 @@ app.use('/api/upload', require('./routes/uploads.route'));
 // Base de datos
 
 dbConenction();
+
+//Directorio público
+app.use(express.static('public'));
+
+
+
 // Obteniendo el puerto desde variables de entorno
 const { PORT } = process.env;
 

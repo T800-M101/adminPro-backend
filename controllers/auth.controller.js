@@ -4,6 +4,7 @@ const { response } = require('express'); // sirve para definir el tipo de la res
 const bcrypt = require('bcryptjs');
 const User = require('../models/user.model');
 const { generateJWT } = require('../helpers/jwt');
+const { googleVerify } = require('../helpers/google-verify');
 
 const login = async(req, res = response) => {
 
@@ -51,7 +52,66 @@ const login = async(req, res = response) => {
 
 }
 
+// Google controller
+const googleSignIn = async( req, res = response) => {
+
+const googleToken = req.body.token;
+
+try {
+    
+  const {name, email, picture } =  await googleVerify(googleToken);
+
+  // Verify user in the database with the email
+  const userDB = await User.findOne({ email});
+  let user;
+
+  if(!userDB){
+      // if user does not exist
+    user = new User({
+       name,
+       email,
+       password: '@@@',
+       img:picture,
+       google:true
+    });
+
+  }else {
+      // If user exist
+    user = userDB;
+    user.google = true
+    user.password = '@@@'
+  }
+
+// Save into database
+await user.save();
+
+   // Generte TOKEN - JWT
+
+   const token = await generateJWT(user._id);
+   res.json({
+       ok:true,
+       token
+   })
+
+    res.json({
+        ok:true,
+        msg:'Google Signin',
+        token
+    });
+
+} catch (error) {
+    console.log(error)
+    res.status(401).json({
+        ok:false,
+        msg:'Token is invalid'
+        
+    });
+}
+
+
+}
 
 module.exports = {
-    login
+    login,
+    googleSignIn
 }
