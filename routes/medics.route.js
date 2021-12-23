@@ -25,7 +25,22 @@ router.post('/',
 ], 
 createMedic
 );
-router.put('/:id',[],updateMedic);
+
+
+router.put('/:id',
+[
+   validateJWT,
+   check('name', 'The name of the medic is required').not().isEmpty(),
+   check('id', 'The id of the hospital is required').not().isEmpty(),
+   validateFields
+],
+updateMedic
+);
+
+
+
+
+
 router.delete('/:id',validateJWT,deleteMedic);
 
 

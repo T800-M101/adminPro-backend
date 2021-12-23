@@ -5,8 +5,9 @@
 // ================= IMPORTS ===========================//
 const { Router } = require('express');
 const { check } = require('express-validator');
-const { login, googleSignIn } = require('../controllers/auth.controller');
-const { validateFields } = require('../middlewares/validate-fields.js')
+const { login, googleSignIn, renewToken } = require('../controllers/auth.controller');
+const { validateFields } = require('../middlewares/validate-fields.js');
+const { validateJWT } = require('../middlewares/validate-jwt');
 
 const router = Router();
 
@@ -29,6 +30,9 @@ router.post('/google',
 ],
 googleSignIn
 )
+
+
+router.get('/renew', validateJWT, renewToken)
 
 
 

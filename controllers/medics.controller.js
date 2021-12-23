@@ -49,20 +49,78 @@ console.log(medic);
 }
 
 
-const updateMedic = (req, res = response) => {
-    res.json({
-        ok:true,
-        msg:'Houston!!'
-    })
+const updateMedic = async(req, res = response) => {
+    const name = req.params.name;
+    const id = req.params.id;
+    const uid = req.uid;
+
+   try {
+
+    
+    const medic = await Medic.findById(id);
+
+    if(!medic){
+       return res.status(404).json({
+           ok:false,
+           msg: 'There is no medic with this id.'
+       });
+    }
+
+    const medicChanges = {
+        ...req.body,
+        user:uid
+    }
+
+    // {new:true} regresa el último documento actualizado
+    const medicUpdated = await Medic.findByIdAndUpdate(id, medicChanges, {new: true});
+       res.json({
+           ok:true,
+           msg:'The medic has been updated',
+           medicUpdated
+       });
+       
+   } catch (error) {
+       console.log(error);
+       res.status(500).json({
+        ok:false,
+        msg: 'Talk to the admin.'
+    });
+   }
 }
 
 
 
-const deleteMedic = (req, res = response) => {
-    res.json({
-        ok:true,
-        msg:'Houston!!'
-    })
+const deleteMedic = async(req, res = response) => {
+    const id = req.params.id;
+   try {
+
+    
+    const medic = await Medic.findById(id);
+
+    if(!medic){
+       return res.status(404).json({
+           ok:false,
+           msg: 'There is no medic with this id.'
+       });
+    }
+
+   
+
+    // {new:true} regresa el último documento actualizado
+    await Medic.findOneAndDelete(id);
+       res.json({
+           ok:true,
+           msg:'The medic has been deleted',
+           
+       });
+       
+   } catch (error) {
+       console.log(error);
+       res.status(500).json({
+        ok:false,
+        msg: 'Talk to the admin.'
+    });
+   }
 }
 
 
